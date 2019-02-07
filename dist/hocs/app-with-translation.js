@@ -27,38 +27,21 @@ function _default(WrappedComponent) {
   } = this;
 
   class AppWithTranslation extends _react.default.Component {
-    constructor(props) {
-      super(props);
-
-      if (config.localeSubpaths) {
-        i18n.on('languageChanged', lng => {
-          if (process.browser) {
-            const {
-              router
-            } = props;
-            const {
-              pathname,
-              asPath,
-              query: routerQuery
-            } = router;
-            const [as, query] = (0, _utils.lngPathCorrector)(config, i18n, {
-              asPath,
-              query: routerQuery
-            }, lng);
-
-            if (as !== asPath) {
-              router.replace({
-                pathname,
-                query
-              }, as, {
-                shallow: true
-              });
-            }
-          }
-        });
-      }
-    }
-
+    // constructor(props) {
+    //   super(props)
+    //   if (config.localeSubpaths) {
+    //     i18n.on('languageChanged', (lng) => {
+    //       if (process.browser) {
+    //         const { router } = props
+    //         const { pathname, asPath, query: routerQuery } = router
+    //         const [as, query] = lngPathCorrector(config, i18n, { asPath, query: routerQuery }, lng)
+    //         if (as !== asPath) {
+    //           router.replace({ pathname, query }, as, { shallow: true })
+    //         }
+    //       }
+    //     })
+    //   }
+    // }
     static async getInitialProps(ctx) {
       let wrappedComponentProps = {
         pageProps: {}
