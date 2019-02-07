@@ -34,8 +34,8 @@ export default (req, res) => {
       If a user has a default language prefix
       in their URL, strip it.
     */
-    if (language === defaultLanguage && req.url.startsWith(`/${defaultLanguage}/`)) {
-      redirectWithoutCache(res, req.url.replace(`/${defaultLanguage}/`, '/'))
-    }
+    // if (language === defaultLanguage && req.url.startsWith(`/${defaultLanguage}/`)) {
+    //   redirectWithoutCache(res, req.url.replace(`/${defaultLanguage}/`, '/'))
+    // }
   }
 }
