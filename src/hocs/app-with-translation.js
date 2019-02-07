@@ -8,30 +8,27 @@ import { NextStaticProvider } from 'components'
 import hoistNonReactStatics from 'hoist-non-react-statics'
 
 export default function (WrappedComponent) {
-
   const { config, consoleMessage, i18n } = this
 
   class AppWithTranslation extends React.Component {
+    // constructor(props) {
+    //   super(props)
 
-    constructor(props) {
-      super(props)
-
-      if (config.localeSubpaths) {
-        i18n.on('languageChanged', (lng) => {
-          if (process.browser) {
-            const { router } = props
-            const { pathname, asPath, query: routerQuery } = router
-            const [as, query] = lngPathCorrector(config, i18n, { asPath, query: routerQuery }, lng)
-            if (as !== asPath) {
-              router.replace({ pathname, query }, as, { shallow: true })
-            }
-          }
-        })
-      }
-    }
+    //   if (config.localeSubpaths) {
+    //     i18n.on('languageChanged', (lng) => {
+    //       if (process.browser) {
+    //         const { router } = props
+    //         const { pathname, asPath, query: routerQuery } = router
+    //         const [as, query] = lngPathCorrector(config, i18n, { asPath, query: routerQuery }, lng)
+    //         if (as !== asPath) {
+    //           router.replace({ pathname, query }, as, { shallow: true })
+    //         }
+    //       }
+    //     })
+    //   }
+    // }
 
     static async getInitialProps(ctx) {
-
       let wrappedComponentProps = { pageProps: {} }
       if (WrappedComponent.getInitialProps) {
         wrappedComponentProps = await WrappedComponent.getInitialProps(ctx)
@@ -51,12 +48,10 @@ export default function (WrappedComponent) {
 
       // Step 1: Determine initial language
       if (req && req.i18n) {
-
         initialLanguage = lngFromReq(req)
 
         // Perform a lang change in case we're not on the right lang
         await i18n.changeLanguage(initialLanguage)
-
       } else if (Array.isArray(i18n.languages) && i18n.languages.length > 0) {
         initialLanguage = i18n.language
       }
@@ -68,7 +63,10 @@ export default function (WrappedComponent) {
       } else {
         consoleMessage(
           'warn',
-          `You have not declared a namespacesRequired array on your page-level component: ${ctx.Component.displayName || ctx.Component.name || 'Component'}. This will cause all namespaces to be sent down to the client, possibly negatively impacting the performance of your app. For more info, see: https://github.com/isaachinman/next-i18next#4-declaring-namespace-dependencies`,
+          `You have not declared a namespacesRequired array on your page-level component: ${ctx
+            .Component.displayName
+            || ctx.Component.name
+            || 'Component'}. This will cause all namespaces to be sent down to the client, possibly negatively impacting the performance of your app. For more info, see: https://github.com/isaachinman/next-i18next#4-declaring-namespace-dependencies`,
         )
       }
 
@@ -82,7 +80,6 @@ export default function (WrappedComponent) {
 
       // Step 3: Perform data fetching, depending on environment
       if (req && req.i18n) {
-
         // Initialise the store with only the initialLanguage and
         // necessary namespaces needed to render this specific tree
         const { fallbackLng } = config
@@ -91,18 +88,12 @@ export default function (WrappedComponent) {
           initialI18nStore[fallbackLng] = {}
         }
         namespacesRequired.forEach((ns) => {
-          initialI18nStore[initialLanguage][ns] = (
-            (req.i18n.services.resourceStore.data[initialLanguage] || {})[ns] || {}
-          )
+          initialI18nStore[initialLanguage][ns] = (req.i18n.services.resourceStore.data[initialLanguage] || {})[ns] || {}
           if (fallbackLng) {
-            initialI18nStore[fallbackLng][ns] = (
-              (req.i18n.services.resourceStore.data[fallbackLng] || {})[ns] || {}
-            )
+            initialI18nStore[fallbackLng][ns] = (req.i18n.services.resourceStore.data[fallbackLng] || {})[ns] || {}
           }
         })
-
       } else if (Array.isArray(i18n.languages) && i18n.languages.length > 0) {
-
         // Load newly-required translations if changing route clientside
         await Promise.all(
           namespacesRequired
@@ -144,8 +135,7 @@ export default function (WrappedComponent) {
     }
   }
 
-  return hoistNonReactStatics(
-    withRouter(AppWithTranslation), WrappedComponent, { getInitialProps: true },
-  )
-
+  return hoistNonReactStatics(withRouter(AppWithTranslation), WrappedComponent, {
+    getInitialProps: true,
+  })
 }
