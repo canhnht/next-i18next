@@ -11,10 +11,12 @@ var _detectNode = _interopRequireDefault(require("detect-node"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 var _default = userConfig => {
-  let combinedConfig = { ..._defaultConfig.default,
-    ...userConfig
-  };
+  let combinedConfig = _objectSpread({}, _defaultConfig.default, userConfig);
 
   if (!userConfig.fallbackLng) {
     combinedConfig.fallbackLng = process.env.NODE_ENV === 'production' ? combinedConfig.defaultLanguage : null;
@@ -36,14 +38,14 @@ var _default = userConfig => {
       localePath,
       localeStructure
     } = combinedConfig;
-    combinedConfig = { ...combinedConfig,
+    combinedConfig = _objectSpread({}, combinedConfig, {
       preload: allLanguages,
       ns: getAllNamespaces(path.join(process.cwd(), `${localePath}/${defaultLanguage}`)),
       backend: {
         loadPath: path.join(process.cwd(), `${localePath}/${localeStructure}.json`),
         addPath: path.join(process.cwd(), `${localePath}/${localeStructure}.missing.json`)
       }
-    };
+    });
   }
 
   return combinedConfig;
